@@ -28,7 +28,7 @@ Discord Notification Made Easy.
 ### Minimum
 
 ```yaml
-- uses: sarisia/actions-status-discord@v1
+- uses: despegar/actions-status-discord@v1
   if: always()
   with:
     webhook: ${{ secrets.DISCORD_WEBHOOK }}
@@ -39,7 +39,7 @@ Discord Notification Made Easy.
 ### Full options
 
 ```yaml
-- uses: sarisia/actions-status-discord@v1
+- uses: despegar/actions-status-discord@v1
   if: always()
   with:
     webhook: ${{ secrets.DISCORD_WEBHOOK }}
@@ -56,7 +56,7 @@ Discord Notification Made Easy.
 ### No detail
 
 ```yaml
-- uses: sarisia/actions-status-discord@v1
+- uses: despegar/actions-status-discord@v1
   if: always()
   env:
     DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
@@ -120,14 +120,14 @@ Just change `job` to `title` in your workflow file to make it work. -->
 Some fields support markdown syntax.
 
 ```yaml
-- uses: sarisia/actions-status-discord@v1
+- uses: despegar/actions-status-discord@v1
   with:
     webhook: ${{ secrets.DISCORD_WEBHOOK }}
     nodetail: true
     title: New version of `software` is ready!
     description: |
       Version `1.2.3-alpha`
-      Click [here](https://github.com/sarisia/actions-status-discord) to download!
+      Click [here](https://github.com/despegar/actions-status-discord) to download!
 ```
 
 ![image](https://user-images.githubusercontent.com/33576079/102154106-0f83c600-3ebc-11eb-9b4e-b8a90afae4db.png)
@@ -169,5 +169,5 @@ Do not append `/github` suffix to your webhook URL. See [Inputs](#inputs) sectio
 
 ## Questions? Bugs?
 
-Feel free to ask in [Discussions](https://github.com/sarisia/actions-status-discord/discussions),
-or report bugs in [Issues](https://github.com/sarisia/actions-status-discord/issues)!
+Feel free to ask in [Discussions](https://github.com/despegar/actions-status-discord/discussions),
+or report bugs in [Issues](https://github.com/despegar/actions-status-discord/issues)!
