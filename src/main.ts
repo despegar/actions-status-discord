@@ -1,6 +1,6 @@
 import { endGroup, startGroup } from '@actions/core'
 import * as github from '@actions/github'
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { formatEvent } from './format'
 import { getInputs, Inputs, statusOpts } from './input'
 import { logDebug, logError, logInfo } from './utils'
@@ -39,6 +39,10 @@ function wrapWebhook(webhook: string, payload: Object): Promise<void> {
             client.interceptors.request.use( (config: AxiosRequestConfig) => {
                 logInfo(JSON.stringify(config))
                 return config
+            })
+            client.interceptors.response.use((axiosResponse: AxiosResponse) => {
+                logInfo(JSON.stringify(axiosResponse))
+                return axiosResponse
             })
             await client.post(webhook, payload)
         } catch(e: any) {
