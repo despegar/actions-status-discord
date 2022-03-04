@@ -9,7 +9,7 @@
     "release": "rm -rf node_modules && npm ci && npm run build && npm prune --production",
     "version": "npm run release && git add ."
   },
-  "author": "Sarisia",
+  "author": "Despegar",
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^26.0.23",
