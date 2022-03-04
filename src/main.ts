@@ -27,6 +27,8 @@ async function run() {
 function wrapWebhook(webhook: string, payload: Object): Promise<void> {
     return async function() {
         try {
+            logInfo(process.env['http_proxy'] || process.env['HTTP_PROXY'] || 'no http proxy setted')
+            logInfo(process.env['https_proxy'] || process.env['HTTPS_PROXY'] || 'no https proxy setted')
             await axios.post(webhook, payload)
         } catch(e: any) {
             if (e.response) {

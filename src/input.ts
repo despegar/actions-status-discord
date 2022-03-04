@@ -58,8 +58,15 @@ export function getInputs(): Inputs {
     const proxyPort = asNumber(core.getInput('proxyPort', { required: false, trimWhitespace: true }))
 
     if(proxyHost && proxyPort) {
-        process.env['http_proxy'] = `http://${proxyHost}:${proxyPort}`
-        process.env['https_proxy'] = `http://${proxyHost}:${proxyPort}`
+        delete process.env['http_proxy']
+        delete process.env['https_proxy']
+        delete process.env['HTTP_PROXY']
+        delete process.env['HTTPS_PROXY']
+        const proxy = `http://${proxyHost}:${proxyPort}`
+        process.env['http_proxy'] = proxy
+        process.env['https_proxy'] = proxy
+        process.env['HTTP_PROXY'] = proxy
+        process.env['HTTPS_PROXY'] = proxy
     }
 
     const inputs: Inputs =  {
