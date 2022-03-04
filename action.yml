@@ -1,6 +1,6 @@
 name: 'Actions Status Discord'
 description: 'Post Github Actions CI status to Discord'
-author: 'Sarisia'
+author: 'Despegar'
 
 inputs:
   webhook:
@@ -48,6 +48,14 @@ inputs:
     description: "Suppress detailed embed fields"
     required: false
     default: 'false'
+  proxyHost:
+    description: "for using a proxy"
+    required: false
+    default: ''
+  proxyPort:
+    description: "for using a proxy"
+    required: false
+    default: ''
 
 runs:
   using: 'node12'
