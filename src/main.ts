@@ -43,6 +43,9 @@ function wrapWebhook(webhook: string, payload: Object): Promise<void> {
             client.interceptors.response.use((axiosResponse: AxiosResponse) => {
                 logInfo(JSON.stringify(axiosResponse))
                 return axiosResponse
+            }, (error: AxiosError) => {
+                logInfo(JSON.stringify(error))
+                return error
             })
             await client.post(webhook, payload)
         } catch(e: any) {
