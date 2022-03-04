@@ -16,6 +16,10 @@ async function run() {
         startGroup('Dump payload')
             logInfo(JSON.stringify(payload, null, 2))
         endGroup()
+        startGroup('Proxy config')
+            logInfo(`http_proxy -> ${process.env['http_proxy'] || process.env['HTTP_PROXY'] || 'no http proxy setted'}`)
+            logInfo(`https_proxy -> ${process.env['https_proxy'] || process.env['HTTPS_PROXY'] || 'no https proxy setted'}`)
+        endGroup()
 
         logInfo(`Triggering ${inputs.webhooks.length} webhook${inputs.webhooks.length>1 ? 's' : ''}...`)
         await Promise.all(inputs.webhooks.map(w => wrapWebhook(w.trim(), payload)))
@@ -27,9 +31,7 @@ async function run() {
 function wrapWebhook(webhook: string, payload: Object): Promise<void> {
     return async function() {
         try {
-            logInfo(process.env['http_proxy'] || process.env['HTTP_PROXY'] || 'no http proxy setted')
-            logInfo(process.env['https_proxy'] || process.env['HTTPS_PROXY'] || 'no https proxy setted')
-            await axios.post(webhook, payload)
+            await axios.post(webhook, payload, {maxRedirects: 20})
         } catch(e: any) {
             if (e.response) {
                 logError(`Webhook response: ${e.response.status}: ${JSON.stringify(e.response.data)}`)
