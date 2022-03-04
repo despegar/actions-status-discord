@@ -49,6 +49,8 @@ Discord Notification Made Easy.
     color: 0x0000ff
     username: GitHub Actions
     avatar_url: ${{ secrets.AVATAR_URL }}
+    proxyHost: egress-proxy
+    proxyPort: 3129
 ```
 
 ![image](https://user-images.githubusercontent.com/33576079/102154036-ecf1ad00-3ebb-11eb-9af3-ff58982d9ecb.png)

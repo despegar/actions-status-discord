@@ -21,3 +21,7 @@ export function logWarning(msg: string) {
 export function stob(s: string): boolean {
     return s.trim().toLowerCase() === 'true'
 }
+
+export function asNumber(s?: string): number | undefined {
+    return s ? parseInt(s) : undefined
+}

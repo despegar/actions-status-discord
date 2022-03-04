@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import { logWarning, stob } from './utils'
+import { asNumber, logWarning, stob } from './utils'
 
 export interface Inputs {
     webhooks: string[]
@@ -12,6 +12,8 @@ export interface Inputs {
     avatar_url: string
     nocontext: boolean
     noprefix: boolean
+    proxyHost?: string
+    proxyPort?: number
 }
 
 interface StatusOption {
@@ -36,7 +38,7 @@ export const statusOpts: Record<string, StatusOption> = {
 
 export function getInputs(): Inputs {
     // webhook
-    const webhook: string = core.getInput('webhook').trim() || process.env.DISCORD_WEBHOOK || ''
+    const webhook: string = core.getInput('webhook', { required: true, trimWhitespace: true}) || process.env.DISCORD_WEBHOOK || ''
     const webhooks: string[] = webhook.split('\n').filter(x => x || false)
     // prevent webhooks from leak
     webhooks.forEach((w, i) => {
@@ -52,17 +54,23 @@ export function getInputs(): Inputs {
     const nocontext = nodetail || stob(core.getInput('nocontext'))
     const noprefix = nodetail || stob(core.getInput('noprefix'))
 
+    // retrieve proxy config
+    const proxyHost = core.getInput('proxyHost', { required: false, trimWhitespace: true })
+    const proxyPort = asNumber(core.getInput('proxyPort', { required: false, trimWhitespace: true }))
+
     const inputs: Inputs =  {
         webhooks: webhooks,
-        status: core.getInput('status').trim().toLowerCase(),
-        description: core.getInput('description').trim(),
-        title: (core.getInput('title') || core.getInput('job')).trim(),
-        image: core.getInput('image').trim(),
+        status: core.getInput('status', { trimWhitespace: true }).toLowerCase(),
+        description: core.getInput('description',  { trimWhitespace: true }),
+        title: (core.getInput('title') || core.getInput('job', { trimWhitespace: true })),
+        image: core.getInput('image', { trimWhitespace: true }),
         color: parseInt(core.getInput('color')),
-        username: core.getInput('username').trim(),
-        avatar_url: core.getInput('avatar_url').trim(),
+        username: core.getInput('username', { trimWhitespace: true }),
+        avatar_url: core.getInput('avatar_url', { trimWhitespace: true }),
         nocontext: nocontext,
-        noprefix: noprefix
+        noprefix: noprefix,
+        proxyHost,
+        proxyPort
     }
 
     // validate
