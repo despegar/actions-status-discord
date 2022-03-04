@@ -58,10 +58,10 @@ export function getInputs(): Inputs {
     const proxyPort = asNumber(core.getInput('proxyPort', { required: false, trimWhitespace: true }))
 
     if(proxyHost && proxyPort) {
-        process.env['http_proxy'] = `${proxyHost}:${proxyPort}`
-        process.env['https_proxy'] = `${proxyHost}:${proxyPort}`
+        process.env['http_proxy'] = `http://${proxyHost}:${proxyPort}`
+        process.env['https_proxy'] = `http://${proxyHost}:${proxyPort}`
     }
-    
+
     const inputs: Inputs =  {
         webhooks: webhooks,
         status: core.getInput('status', { trimWhitespace: true }).toLowerCase(),
