@@ -31,7 +31,11 @@ async function run() {
 function wrapWebhook(webhook: string, payload: Object): Promise<void> {
     return async function() {
         try {
-            await axios.post(webhook, payload, {maxRedirects: 20})
+            const fullProxy = process.env['http_proxy'] || process.env['HTTP_PROXY'] || process.env['https_proxy'] || process.env['HTTPS_PROXY']
+            const host = fullProxy ? fullProxy.split(':')[0] : ''
+            const port = fullProxy ? parseInt(fullProxy.split(':')[1]) : ''
+            const proxy = host && port ? {proxy:{host, port}} : {} 
+            await axios.post(webhook, payload, proxy)
         } catch(e: any) {
             if (e.response) {
                 logError(`Webhook response: ${e.response.status}: ${JSON.stringify(e.response.data)}`)
