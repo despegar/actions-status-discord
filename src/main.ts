@@ -27,8 +27,8 @@ async function run() {
 function wrapWebhook(webhook: string, payload: Object, proxyHost: string | undefined, proxyPort: number | undefined ): Promise<void> {
     return async function() {
         try {
-            const config = proxyHost && proxyPort ? {proxy: { host: proxyHost, port: proxyPort }} : {}
-            await axios.post(webhook, payload, config)
+            const proxy = proxyHost && proxyPort ? { proxy: { host: proxyHost, port: proxyPort, protocol: 'http' } }: {}
+            await axios.post(webhook, payload, proxy)
         } catch(e: any) {
             if (e.response) {
                 logError(`Webhook response: ${e.response.status}: ${JSON.stringify(e.response.data)}`)
