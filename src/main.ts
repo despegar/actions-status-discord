@@ -18,17 +18,16 @@ async function run() {
         endGroup()
 
         logInfo(`Triggering ${inputs.webhooks.length} webhook${inputs.webhooks.length>1 ? 's' : ''}...`)
-        await Promise.all(inputs.webhooks.map(w => wrapWebhook(w.trim(), payload, inputs.proxyHost, inputs.proxyPort)))
+        await Promise.all(inputs.webhooks.map(w => wrapWebhook(w.trim(), payload)))
     } catch(e: any) {
         logError(`Unexpected failure: ${e} (${e.message})`)
     }
 }
 
-function wrapWebhook(webhook: string, payload: Object, proxyHost: string | undefined, proxyPort: number | undefined ): Promise<void> {
+function wrapWebhook(webhook: string, payload: Object): Promise<void> {
     return async function() {
         try {
-            const proxy = proxyHost && proxyPort ? { proxy: { host: proxyHost, port: proxyPort, protocol: 'http' } }: {}
-            await axios.post(webhook, payload, proxy)
+            await axios.post(webhook, payload)
         } catch(e: any) {
             if (e.response) {
                 logError(`Webhook response: ${e.response.status}: ${JSON.stringify(e.response.data)}`)

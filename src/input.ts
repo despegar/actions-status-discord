@@ -1,4 +1,5 @@
 import * as core from '@actions/core'
+import { env } from 'process'
 import { asNumber, logWarning, stob } from './utils'
 
 export interface Inputs {
@@ -12,8 +13,6 @@ export interface Inputs {
     avatar_url: string
     nocontext: boolean
     noprefix: boolean
-    proxyHost?: string
-    proxyPort?: number
 }
 
 interface StatusOption {
@@ -58,6 +57,11 @@ export function getInputs(): Inputs {
     const proxyHost = core.getInput('proxyHost', { required: false, trimWhitespace: true })
     const proxyPort = asNumber(core.getInput('proxyPort', { required: false, trimWhitespace: true }))
 
+    if(proxyHost && proxyPort) {
+        process.env['http_proxy'] = `${proxyHost}:${proxyPort}`
+        process.env['https_proxy'] = `${proxyHost}:${proxyPort}`
+    }
+    
     const inputs: Inputs =  {
         webhooks: webhooks,
         status: core.getInput('status', { trimWhitespace: true }).toLowerCase(),
@@ -68,9 +72,7 @@ export function getInputs(): Inputs {
         username: core.getInput('username', { trimWhitespace: true }),
         avatar_url: core.getInput('avatar_url', { trimWhitespace: true }),
         nocontext: nocontext,
-        noprefix: noprefix,
-        proxyHost,
-        proxyPort
+        noprefix: noprefix
     }
 
     // validate
