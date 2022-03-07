@@ -38,7 +38,7 @@ function wrapWebhook(webhook: string, payload: Object): Promise<void> {
             let proxy: any = host && port ? { proxy: { host, port }} : null
             if(proxy) {
                 const agent = new HttpsProxyAgent({host, port, rejectUnauthorized: false})
-                proxy = {...proxy, httpAgent: agent, httpsAgent: agent}
+                proxy = { httpAgent: agent, httpsAgent: agent}
             }
             const client = axios.create({...proxy, maxRedirects: 0, timeout: 0, })
             client.interceptors.request.use( (config: AxiosRequestConfig) => {
