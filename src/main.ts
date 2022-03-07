@@ -35,12 +35,12 @@ function wrapWebhook(webhook: string, payload: Object): Promise<void> {
             const fullProxy = process.env['http_proxy'] || process.env['HTTP_PROXY'] || process.env['https_proxy'] || process.env['HTTPS_PROXY']
             const host = fullProxy ? fullProxy.split(':')[0] : ''
             const port = fullProxy ? parseInt(fullProxy.split(':')[1]) : ''
-            let proxy: any = host && port ? { proxy: { host, port }} : {}
-            if(fullProxy) {
-                const agent = new HttpsProxyAgent(fullProxy)
+            let proxy: any = host && port ? { proxy: { host, port }} : null
+            if(proxy) {
+                const agent = new HttpsProxyAgent({host, port, rejectUnauthorized: false})
                 proxy = {...proxy, httpAgent: agent, httpsAgent: agent}
             }
-            const client = axios.create(proxy)
+            const client = axios.create({...proxy, maxRedirects: 0, timeout: 0, })
             client.interceptors.request.use( (config: AxiosRequestConfig) => {
                 logInfo(JSON.stringify(config))
                 return config
