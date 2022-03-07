@@ -1,8 +1,9 @@
 import { endGroup, startGroup } from '@actions/core'
 import * as github from '@actions/github'
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosResponse } from 'axios'
 import { formatEvent } from './format'
-import createHttpsProxyAgent from 'https-proxy-agent'
+//import createHttpsProxyAgent from 'https-proxy-agent'
+import createHttpProxyAgent from 'http-proxy-agent'
 import { getInputs, Inputs, statusOpts } from './input'
 import { logDebug, logError, logInfo } from './utils'
 import { fitEmbed } from './validate'
@@ -37,7 +38,7 @@ function wrapWebhook(webhook: string, payload: Object): Promise<void> {
             const port = fullProxy ? parseInt(fullProxy.split(':')[1]) : ''
             let proxy: any = host && port ? { proxy: { host, port }} : null
             if(proxy) {
-                const agent = createHttpsProxyAgent({host, port, rejectUnauthorized: false})
+                const agent = createHttpProxyAgent({host, port, rejectUnauthorized: false})
                 proxy = { httpAgent: agent, httpsAgent: agent}
             }
             const client = axios.create({...proxy, maxRedirects: 0, timeout: 0, })
