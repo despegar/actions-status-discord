@@ -1,10 +1,12 @@
 import { endGroup, startGroup } from '@actions/core'
 import * as github from '@actions/github'
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+//import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import fetch from 'node-fetch'
 import { formatEvent } from './format'
 import { getInputs, Inputs, statusOpts } from './input'
 import { logDebug, logError, logInfo } from './utils'
 import { fitEmbed } from './validate'
+import createHttpsProxyAgent from 'https-proxy-agent'
 
 async function run() {
     try {
@@ -34,9 +36,20 @@ function wrapWebhook(webhook: string, payload: Object): Promise<void> {
             const fullProxy = process.env['http_proxy'] || process.env['HTTP_PROXY'] || process.env['https_proxy'] || process.env['HTTPS_PROXY']
             const host = fullProxy ? fullProxy.split(':')[0] : ''
             const port = fullProxy ? parseInt(fullProxy.split(':')[1]) : ''
-            const proxy = host && port ? {proxy:{host, port}} : {}
-            const client = axios.create(proxy)
-            client.interceptors.request.use( (config: AxiosRequestConfig) => {
+            const proxy = host && port ? { host, port } : {}
+            let options: any = {
+                method: 'POST',
+                body: JSON.stringify(payload),
+                headers: {'content-type': 'application/json'},
+            }
+            if(proxy) {
+                options = { ...options, agent: createHttpsProxyAgent(proxy) }
+
+            }
+            await fetch(webhook, options)
+
+            /*const client = axios.create(proxy)
+            /client.interceptors.request.use( (config: AxiosRequestConfig) => {
                 logInfo(JSON.stringify(config))
                 return config
             })
@@ -47,7 +60,7 @@ function wrapWebhook(webhook: string, payload: Object): Promise<void> {
                 logInfo(JSON.stringify(error))
                 return error
             })
-            await client.post(webhook, payload)
+            await client.post(webhook, payload) */
         } catch(e: any) {
             if (e.response) {
                 logError(`Webhook response: ${e.response.status}: ${JSON.stringify(e.response.data)}`)
