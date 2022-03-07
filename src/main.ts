@@ -1,7 +1,6 @@
 import { endGroup, startGroup } from '@actions/core'
 import * as github from '@actions/github'
 //import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
-import fetch from 'node-fetch'
 import { formatEvent } from './format'
 import { getInputs, Inputs, statusOpts } from './input'
 import { logDebug, logError, logInfo } from './utils'
